@@ -1,6 +1,9 @@
 import random
 import logging
 
+from rest_framework.generics import GenericAPIView
+
+from . import serializers
 from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -17,10 +20,19 @@ logger = logging.getLogger('django')
 
 
 # url('^sms_codes/(?P<mobile>1[3-9]\d{9})/$', views.SMSCodeView.as_view()),
-class SMSCodeView(APIView):
+class SMSCodeView(GenericAPIView):
     """发送短信验证码"""
+    # 指定序列化器
+    serializer_class = serializers.ImageCodeCheckSerializer
+
     def get(self, request, mobile):
         # 忽略校验
+        # 创建序列化器对象
+        data = request.query_params
+        serializer = self.get_serializer(data=request.query_params)
+
+        # 开启校验
+        serializer.is_valid(raise_exception=True)
 
         # 生成短信验证码
         sms_code = '%06d' % random.randint(0, 999999)
