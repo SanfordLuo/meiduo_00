@@ -35,7 +35,7 @@ class ImageCodeCheckSerializer(serializers.Serializer):
         except RedisError as e:
             logger.error(e)
 
-        # 对比客户端和服务器的验证阿妈
+        # 对比客户端和服务器的验证码
         # 因为py3中的redis，存储的数据都是bytes类型的，而在读取时也是保持原始的bytes类型，因为快
         image_code_server = image_code_server.decode()
         if text.lower() != image_code_server.lower():

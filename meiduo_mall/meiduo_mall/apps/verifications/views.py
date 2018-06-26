@@ -8,11 +8,12 @@ from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.http import HttpResponse
-from libs.captcha.captcha import captcha
+from meiduo_mall.libs.captcha.captcha import captcha
 from django_redis import get_redis_connection
 
-from libs.yuntongxun.sms import CCP
+from meiduo_mall.libs.yuntongxun.sms import CCP
 from . import constants
+from celery_tasks.sms.tasks import send_sms_code
 # Create your views here.
 
 # 日志记录器
@@ -40,10 +41,24 @@ class SMSCodeView(GenericAPIView):
 
         # 存储短信到redis数据库
         redis_conn = get_redis_connection('verify_codes')
+        # redis_conn.setex('sms_%s' % mobile, constants.SMS_CODE_REDIS_EXPIRES, sms_code)
+
+        # 记录用户发送短信的次数
+        # redis_conn.setex('send_flag_%s' % mobile, constants.SEND_SMS_CODE_INTERVAL, 1)
+
+        # 创建管道
+        pl = redis_conn.pipeline()
         redis_conn.setex('sms_%s' % mobile, constants.SMS_CODE_REDIS_EXPIRES, sms_code)
+        # 记录用户发送短信的次数
+        pl.setex('send_flag_%s' % mobile, constants.SEND_SMS_CODE_INTERVAL, 1)
+        # 开启执行
+        pl.execute()
+        # 调用异步任务，将异步任务发送不到broker任务队列中
+        # 使用delay函数
+        send_sms_code.delay(mobile, sms_code)
 
         # 发送短信验证码
-        CCP().send_template_sms(mobile, [sms_code, constants.SMS_CODE_REDIS_EXPIRES // 60],constants.SEND_SMS_TEMPLATE_ID)
+        # CCP().send_template_sms(mobile, [sms_code, constants.SMS_CODE_REDIS_EXPIRES // 60],constants.SEND_SMS_TEMPLATE_ID)
 
         # 响应结果
         return Response({'message': 'OK'})

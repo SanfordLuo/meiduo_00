@@ -1,6 +1,6 @@
 # -*- coding:utf-8 -*-
 
-from meiduo_mall.libs.yuntongxun.CCPRestSDK import REST
+from celery_tasks.sms.yuntongxun.CCPRestSDK import REST
 
 # 说明：主账号，登陆云通讯网站后，可在"控制台-应用"中看到开发者主账号ACCOUNT SID
 _accountSid = '8aaf070863b526a40163bc19a622057d'
@@ -13,7 +13,6 @@ _appId = '8aaf070863b526a40163bc19a7920583'
 
 # 说明：请求地址，生产环境配置成app.cloopen.com
 _serverIP = 'sandboxapp.cloopen.com'
-
 
 # 说明：请求端口 ，生产环境为8883
 _serverPort = "8883"
