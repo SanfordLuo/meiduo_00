@@ -21,5 +21,7 @@ urlpatterns = [
     # 验证码
     url(r'^', include('verifications.urls')),
     url(r'^', include('users.urls')),
+    # qq登陆
+    url(r'^oauth/', include('oauth.urls')),
 
 ]
