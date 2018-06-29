@@ -92,3 +92,11 @@ class CreateUserSerializer(serializers.ModelSerializer):
         user.token = token
 
         return user
+
+
+class UserDetailSerializer(serializers.ModelSerializer):
+    """用户详细信息序列化器"""
+    class Meta:
+        model = User
+        # 只负责输出，并指定输出的字段
+        fields = ('id', 'username', 'mobile', 'email', 'email_active')
