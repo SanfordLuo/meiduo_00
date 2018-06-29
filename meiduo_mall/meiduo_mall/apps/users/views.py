@@ -3,7 +3,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from users.models import User
 from rest_framework.response import Response
-from rest_framework.generics import CreateAPIView, RetrieveAPIView
+from rest_framework.generics import CreateAPIView, RetrieveAPIView, UpdateAPIView
+from rest_framework import status
 
 from . import serializers
 # Create your views here.
@@ -71,3 +72,38 @@ class UserDetailView(RetrieveAPIView):
         返回的user是JWT验证系统验证后的登录用户
         """
         return self.request.user
+
+# url(r'^email/$', views.EmailView.as_view()),
+class EmailView(UpdateAPIView):
+    """保存用户邮箱"""
+
+    # 验证用户身份信息
+    permission_classes = [IsAuthenticated]
+    # 指定序列化器
+    serializer_class = serializers.EmailSerializer
+
+
+    def get_object(self):
+        return self.request.user
+
+
+# url(r'^emails/verification/$', views.VerifyEmailView.as_view()),
+class VerifyEmailView(APIView):
+    """邮箱验证"""
+
+    def get(self, request):
+        # 获取token
+        token = request.query_params.get('token')
+        if not token:
+            return Response({"message":'缺少token'}, status=status.HTTP_400_BAD_REQUEST)
+
+        # 验证token,并返回user
+        user = User.check_verify_email_token(token)
+        if not user:
+            return Response({"message": '无效的token'}, status=status.HTTP_400_BAD_REQUEST)
+
+        # 修改当前user的email_active属性的值为True
+        user.email_active = True
+        user.save()
+
+        return Response({'message':'Ok'})

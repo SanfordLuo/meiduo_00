@@ -14,5 +14,9 @@ urlpatterns = [
     url(r'^authorizations/$', obtain_jwt_token),
     # 提供登录用户的详情的
     url(r'^user/$', views.UserDetailView.as_view()),
+    # 保存用户邮箱
+    url(r'^email/$', views.EmailView.as_view()),
+    # 邮箱验证
+    url(r'^emails/verification/$', views.VerifyEmailView.as_view()),
 
 ]
