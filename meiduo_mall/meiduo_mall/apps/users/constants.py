@@ -1,2 +1,4 @@
 # 邮件验证链接有效期：一天
 VERIFY_EMAIL_TOKEN_EXPIRES = 60 * 60 * 24
+# 地址个数限制
+USER_ADDRESS_COUNTS_LIMIT = 6
