@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'users.apps.UsersConfig',
     'corsheaders', # cors
     'oauth.apps.OauthConfig', # QQ登陆
+    'areas.apps.AreasConfig', # 省市区三级联动
 
 ]
 
@@ -249,3 +250,10 @@ EMAIL_HOST_USER = 'sanford_luo@163.com' # 授权的邮箱
 EMAIL_HOST_PASSWORD = 'jayae22378' # 邮箱授权时获得的密码，非注册登录密码
 EMAIL_FROM = '美多商城<sanford_luo@163.com>' # 发件人抬头
 
+# DRF扩展
+REST_FRAMEWORK_EXTENSIONS = {
+    # 缓存时间
+    'DEFAULT_CACHE_RESPONSE_TIMEOUT': 60 * 60,
+    # 缓存存储
+    'DEFAULT_USE_CACHE': 'default',
+}
