@@ -25,5 +25,7 @@ urlpatterns = [
     url(r'^oauth/', include('oauth.urls')),
     # 省市区
     url(r'^', include('areas.urls')),
+    # CKEditor富文本编辑器
+    url(r'^ckeditor/', include('ckeditor_uploader.urls')),
 
 ]
