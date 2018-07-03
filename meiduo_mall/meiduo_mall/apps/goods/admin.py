@@ -55,7 +55,7 @@ class SKUImageAdmin(admin.ModelAdmin):
 
 
 # class GoodsCategoryAdmin(admin.ModelAdmin):
-#     """商品分类静态化"""
+#     """商品分类静态化l"""
 #     def save_model(self, request, obj, form, change):
 #         obj.save()
 #         from celery_tasks.html.tasks import generate_static_list_search_html
